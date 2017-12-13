@@ -1,4 +1,5 @@
 const Apify = require('apify');
+const _ = require('underscore');
 const request = require('request-promise');
 
 async function processResults(connInfo, lastResults){
