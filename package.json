@@ -1,0 +1,16 @@
+{ 
+  "name": "execution-to-knack",
+  "version": "1.0.0",
+  "description": "Apify act for inserting crawler results into a Knack database",
+  "main": "main.js",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cermak-petr/act-execution-to-knack"
+  },
+  "dependencies": { 
+    "apify": "^0.4.37",
+    "underscore": "^1.8.3",
+    "request-promise": "^4.2.2"
+  }
+}
