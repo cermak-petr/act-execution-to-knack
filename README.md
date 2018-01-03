@@ -29,7 +29,7 @@ __The act can be run with a crawler finish webhook, in such case fill just the c
 attribute into a crawler finish webhook data.__
 
 It is possible to transform the crawler column names into the Knack field names using a transform schema.
-This can be done using the optional __schema__ attribute, it is a simple object with the following structure.
+This is what the optional __schema__ attribute is for, it is a simple object with the following structure.
 
 ```javascript
 {
