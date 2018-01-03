@@ -63,7 +63,7 @@ Apify.main(async () => {
             offset: state.offset, 
             limit: limit
         });
-        await processResults(lastResults, input);
+        await processResults(lastResults, input, data ? data.schema : null);
         total = lastResults.total;
         state.offset += limit;
         Apify.setValue('STATE', state);
