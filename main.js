@@ -2,10 +2,27 @@ const Apify = require('apify');
 const _ = require('underscore');
 const request = require('request-promise');
 
-async function processResults(connInfo, results){
+function transform(record, schema, result){
+    for(const key in schema){
+        const column = schema[key];
+        const value = record ? record[key] : '';
+        if(typeof column === 'object'){
+            transform(value, column, result);
+        }
+        else if(value){result[column] = value;}
+        else{result[column] = '';}
+    }
+}
+
+async function processResults(connInfo, results, schema){
     _.chain(results.items).pluck('pageFunctionResult').flatten().each((result) => {
         try{
-            sendToKnack(connInfo, result);
+            if(schema){
+                const nRow = {};
+                transform(result, schema, nRow);
+                await sendToKnack(connInfo, nRow);
+            }
+            else{await sendToKnack(connInfo, result);}
         }
         catch(e){console.log(e);}
     });
@@ -40,7 +57,7 @@ Apify.main(async () => {
 
     let total = -1;
     const limit = 50;
-    while(total === -1 || state.offset + limit < total){
+    while(total === -1 || state.offset < total){
         const lastResults = await Apify.client.crawlers.getExecutionResults({
             executionId: input._id, 
             offset: state.offset, 
