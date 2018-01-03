@@ -33,6 +33,7 @@ This can be done using the __schema__ attribute, it is a simple object with the 
 
 ```javascript
 {
+    // CRAWLER : KNACK
     "col_name_1": "field_001",
     "col_name_2": "field_002",
     ...
