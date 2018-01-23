@@ -36,6 +36,12 @@ This is what the optional __schema__ attribute is for, it is a simple object wit
     // CRAWLER : KNACK
     "col_name_1": "field_001",
     "col_name_2": "field_002",
+    
+    // nested objects are also supported
+    "col_name_3": {
+        "col_name_4": "field_003",
+        ...
+    }
     ...
 }
 ```
