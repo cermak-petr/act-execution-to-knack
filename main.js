@@ -7,11 +7,39 @@ function transform(record, schema, result){
         const column = schema[key];
         const value = record ? record[key] : '';
         if(typeof column === 'object'){
-            transform(value, column, result);
+            if(column.$source){
+                
+            }
+            else{transform(value, column, result);}
         }
         else if(value){result[column] = value;}
         else{result[column] = '';}
     }
+}
+
+const lookupTables = {};
+
+async function getTable(connInfo, scene, view){
+    const key = info.$schema + '_' + info.$view;
+    if(lookupTables[key]){return lookupTables[key];}
+    const table = (await loadFromKnack({
+        "view": view,
+        "scene": scene,
+        "appId": connInfo.appId,
+        "apiKey": connInfo.apiKey
+    })).records;
+    lookupTables[key] = table;
+    return table;
+}
+
+async function lookupConnection(connInfo, connData){
+    const table = getTable(connInfo, connData.$scene, connData.$view);
+    for(const record of table){
+        if(record[connData.$target] == isbn){
+            return record.id;
+        }
+    }
+    return null;
 }
 
 async function processResults(connInfo, results, schema){
@@ -26,6 +54,20 @@ async function processResults(connInfo, results, schema){
         }
         catch(e){console.log(e);}
     });
+}
+
+async function loadFromKnack(connInfo){
+    const options = {
+        method: 'GET',
+        uri: 'https://api.knack.com/v1/pages/' + connInfo.scene + '/views/' + connInfo.view + '/records',
+        json: true,
+        headers: {
+            'X-Knack-Application-Id': connInfo.appId,
+            'X-Knack-REST-API-KEY': connInfo.apiKey,
+            'content-type': 'application/json'
+        }
+    };
+    return await request(options);
 }
 
 async function sendToKnack(connInfo, data){
